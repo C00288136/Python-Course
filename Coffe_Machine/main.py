@@ -89,7 +89,7 @@ while machine_on:
             if transaction_success(payment, drink["cost"]):
                 make_coffee(user_choice,drink["ingredients"])
                 
-            
+             
     
 
 # print report
