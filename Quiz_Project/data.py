@@ -1,3 +1,4 @@
+# learned to use a api to input data from a website of trivia questions into a dictionary
 question_data = [
     {"type": "boolean", "difficulty": "easy", "category": "General Knowledge",
      "question": "Ping-Pong originated in England", "correct_answer": "True", "incorrect_answers": ["False"]},

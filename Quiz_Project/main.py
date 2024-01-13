@@ -3,6 +3,8 @@ from data import question_data
 from quiz_brain import Quizbrain
 question_bank = []
 for item in question_data:
+    # here remember that the "item" is the current instance in the dictionary so the whole section containing the
+    # answer and the question
     question_text = item["question"]
     question_answer = item["correct_answer"]
     new_question = question(question_text,question_answer)
