@@ -65,7 +65,7 @@ pink.goto(-230,-160)
 
 print(finish(200))
 
-if user_bet ==
+if user_bet == yes
 
 
 
