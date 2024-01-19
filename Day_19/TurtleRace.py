@@ -1,81 +1,57 @@
+
 from turtle import Turtle, Screen
 import random as r
 
 def set_speed():
     return r.randint(0,10)
-def finish(finish_line_x):
-    winner = None
-    while not winner:
-        for turtle in turtles:
-            turtle.forward(set_speed())
-            if turtle.xcor() >= finish_line_x:
-                winner = turtle
-                break
-
-    return winner
-
-
-turtles = []
-
-red = Turtle()
-red.color("red")
-red.shape("turtle")
-red.penup()
-turtles.append(red)
-
-blue = Turtle()
-blue.color("blue")
-blue.shape("turtle")
-blue.penup()
-turtles.append(blue)
-
-
-green = Turtle()
-green.color("green")
-green.shape("turtle")
-green.penup()
-turtles.append(green)
-
-
-yellow = Turtle()
-yellow.color("yellow")
-yellow.shape("turtle")
-yellow.penup()
-turtles.append(yellow)
-
-
-pink = Turtle()
-pink.color("pink")
-pink.shape("turtle")
-pink.penup()
-turtles.append(pink)
-
-
-print(turtles)
 
 screen = Screen()
 screen.setup(500,400)
-# user_bet = screen.textinput(title="Make your bet", prompt="Which turtle will win the race? Enter a color:")
 
-red.goto(-230,0)
-blue.goto(-230,80)
-green.goto(-230,160)
-yellow.goto(-230,-80)
-pink.goto(-230,-160)
+colours = ["red","pink","yellow","green","blue","orange"]
+y_axis = [-120,-60,0,60,120,180]
 
-print(finish(200))
+race_on = False
+continue_game = True
 
-if user_bet == yes
+while continue_game:
+    all_turtles=[]
+    for turtle in range(0,6):
+        new_turtle = Turtle(shape="turtle")
+        new_turtle.color(colours[turtle])
+        new_turtle.penup()
+        new_turtle.goto(-230, y_axis[turtle])
+        all_turtles.append(new_turtle)
+    user_bet = screen.textinput(title="Make your bet", prompt="Which turtle will win the race? Enter a color:")
+    if user_bet:
+        race_on = True
 
+    while race_on:
+        for turtle in all_turtles:
 
+            if turtle.xcor() > 220:
+                winner = turtle.pencolor()
+                if user_bet == winner:
+                    print("Congrats you bet on the correct turtle !!.\nYou win")
 
+                    race_on = False
+                    break
+                else:
+                    print(f"You lose {winner} won the race")
 
+                    race_on = False
+                    break
+            turtle.forward(set_speed())
+    play_again = screen.textinput(title="",prompt="Play again")
+    if play_again.lower() == "no":
+        continue_game = False
+    else:
+        continue_game = True
+        race_on = True
+        screen.clear()
 
+screen.bye()
 
-
-
-
-screen.exitonclick()
 
 
 
