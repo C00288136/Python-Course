@@ -3,6 +3,10 @@ from turtle import Turtle
 # Snake class
 STARTING_POSITIONS = [(0, 0), (-20, 0), (-40, 0)]
 MOVE_DIS = 20
+UP = 90
+DOWN = 270
+LEFT = 180
+RIGHT = 0
 
 
 class Snake:
@@ -28,3 +32,22 @@ class Snake:
             new_y = self.snake_parts[segment_num - 1].ycor()
             self.snake_parts[segment_num].goto(new_x, new_y)
         self.snake_parts[0].forward(MOVE_DIS)
+
+
+    # each of these sets and changes the direction the snake is heading
+    def up(self):
+        if self.snake_parts[0].heading() != DOWN:
+            self.snake_parts[0].setheading(UP)
+
+
+    def down(self):
+        if self.snake_parts[0].heading() != UP:
+            self.snake_parts[0].setheading(DOWN)
+
+    def left(self):
+        if self.snake_parts[0].heading() != RIGHT:
+            self.snake_parts[0].setheading(LEFT)
+
+    def right(self):
+        if self.snake_parts[0].heading() != LEFT:
+            self.snake_parts[0].setheading(RIGHT)

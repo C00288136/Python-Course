@@ -17,6 +17,9 @@ while game_on:
     # screen update make it so the graphics of the snake update, and they piece don't move individually 1 by 1
     time.sleep(0.1)
     snake.move()
-    # because the 3 pieces of the snake are not connected we need this method to make sure that the snake looks as if
-    # it is connected the last piece is moved into the position of the second last which keeps the flow
+    screen.listen()
+    screen.onkey(snake.up,"Up")
+    screen.onkey(snake.down,"Down")
+    screen.onkey(snake.left,"Left")
+    screen.onkey(snake.right,"Right")
 screen.exitonclick()
