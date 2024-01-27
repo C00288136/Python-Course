@@ -11,7 +11,6 @@ screen.bgcolor("black")
 screen.title("My snake game")
 screen.tracer(0)
 
-
 snake = Snake()
 food = Food()
 scoreboard = Scoreboard()
@@ -34,10 +33,8 @@ while game_on:
         scoreboard.game_over()
 
     # detect collision with tail
-    for segment in snake.snake_parts:
-        if segment == snake.head:
-            pass
-        elif snake.head.distance(segment) < 10:
+    for segment in snake.snake_parts[1:]:
+        if snake.head.distance(segment) < 10:
             game_on = False
             scoreboard.game_over()
 
