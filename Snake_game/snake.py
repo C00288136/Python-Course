@@ -34,12 +34,20 @@ class Snake:
             self.snake_parts[segment_num].goto(new_x, new_y)
         self.snake_parts[0].forward(MOVE_DIS)
 
+    def extend(self):
+        self.add_segment(self.snake_parts[-1].position())
+
+    def add_segment(self, position):
+        new_part = Turtle('square')
+        new_part.color('white')
+        new_part.penup()
+        new_part.goto(position)
+        self.snake_parts.append(new_part)
 
     # each of these sets and changes the direction the snake is heading
     def up(self):
         if self.snake_parts[0].heading() != DOWN:
             self.snake_parts[0].setheading(UP)
-
 
     def down(self):
         if self.snake_parts[0].heading() != UP:
