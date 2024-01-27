@@ -13,6 +13,7 @@ class Snake:
     def __init__(self):
         self.snake_parts = []
         self.create_snake()
+        self.head = self.snake_parts[0]
 
     def create_snake(self):
         self.snake_parts = []
