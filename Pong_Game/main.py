@@ -15,7 +15,7 @@ player_1 = Paddle()
 player_2 = Paddle_2()
 ball = Ball()
 
-
+y
 
 game_is_on = True
 while game_is_on:
