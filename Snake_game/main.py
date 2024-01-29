@@ -28,7 +28,7 @@ while game_on:
         scoreboard.point()
 
     # detect collision with wall
-    if snake.head.xcor() > 280 or snake.head.xcor() < -280 or snake.head.ycor() > 280 or snake.head.ycor() < -280:
+    if snake.head.xcor() > 290 or snake.head.xcor() < -290 or snake.head.ycor() > 290 or snake.head.ycor() < -290:
         game_on = False
         scoreboard.game_over()
 
