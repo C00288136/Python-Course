@@ -1,17 +1,15 @@
 from turtle import Turtle
 
-with open("data.txt") as file:
-    file.read()
-with open("data.txt") as file:
-    saved = file.read()
+
+
 
 
 class Scoreboard(Turtle):
     def __init__(self):
         super().__init__()
         self.score = 0
-        self.highscore = int(saved)
-
+        with open("data.txt") as data:
+            self.highscore = int(data.read())
         # self.score.penup()
         self.hideturtle()
         self.goto(-50, 280)
