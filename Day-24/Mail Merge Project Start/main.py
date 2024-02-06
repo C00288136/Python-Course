@@ -24,3 +24,4 @@ for name in name_list:
     output_file_name = f"./Output/ReadyToSend/{name}_Letter.txt"
     with open(output_file_name, "w") as output_file:
         output_file.write(replaced_letter)
+# fin
