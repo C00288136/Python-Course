@@ -63,11 +63,29 @@ def save_password():
                 # save updated data
                 json.dump(data, file, indent=4)
         finally:
-                # print(data)
+            # print(data)
             Website_in.delete(0, END)
             password_in.delete(0, END)
             email_in.delete(0, END)
             email_in.insert(0, "myemail@gmail.com")
+
+
+# ---------------------------- SEARCH METHOD ------------------------------- #
+def find_password():
+    try:
+        website_name = Website_in.get()
+        with open("data.json","r") as data_file:
+            data = json.load(data_file)
+    except FileNotFoundError:
+        messagebox.showinfo(title="Error", message="File not found.")
+    else:
+
+        if website_name in data:
+            email = data[website_name]["email"]
+            password = data[website_name]["password"]
+            messagebox.showinfo(title=website_name, message=f"Email: {email}\nPassword: {password}")
+        else:
+            messagebox.showinfo(title="Error", message="No details for this website saved")
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -93,15 +111,17 @@ password_text.grid(row=3, column=0)
 
 # TODO all the input boxes
 Website_in = Entry(width=35)
-Website_in.grid(row=1, column=1, columnspan=2)
+Website_in.grid(row=1, column=1, columnspan=1)
 email_in = Entry(width=35)
 # prepopulates the email entry to speed up process
 email_in.insert(0, "myemail@gmail.com")
-email_in.grid(row=2, column=1, columnspan=2)
+email_in.grid(row=2, column=1, columnspan=1)
 password_in = Entry(width=21)
 password_in.grid(column=1, row=3)
 
 # BUTTON
+search_button = Button(text="Search", command=find_password)
+search_button.grid(row=1,column=2)
 password_generate = Button(text="Generate Password", command=generate_password)
 password_generate.grid(row=3, column=2)
 submit_button = Button(text="Add", width=36, command=save_password)
