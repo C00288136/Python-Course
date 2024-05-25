@@ -6,7 +6,7 @@ BACKGROUND_COLOR = "#B1DDC6"
 
 # TODO make the dictionary for words
 
-df = pd.read_csv("./data/french_words.csv")
+df = pd.read_csv("data/french_words.csv")
 data = df.to_dict(orient="records")
 
 
