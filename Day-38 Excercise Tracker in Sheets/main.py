@@ -1,5 +1,6 @@
 import requests
 from datetime import datetime
+import os
 
 GENDER = "male"
 WEIGHT_KG = "80"
@@ -33,7 +34,7 @@ print(data)
 
 
 
-print(exercise_type)
+
 
 SHEETY_ENDPOINT = "https://api.sheety.co/cb8eb9e122d16917dde918fcd63ff04e/myWorkouts/workouts"
 
@@ -55,7 +56,12 @@ for exercise in data["exercises"]:
             "calories": exercise["nf_calories"]
         }
     }
-
-sheets_response = requests.post(url=SHEETY_ENDPOINT,json=sheet_inputs)
+TOKEN = os.environ["BEARER_TOKEN"]
+bearer_headers = {
+    "Authorization" : f"Bearer {TOKEN}"
+}
+sheets_response = requests.post(url=SHEETY_ENDPOINT,
+                                json=sheet_inputs,
+                                headers=bearer_headers)
 
 print(sheets_response.text)
