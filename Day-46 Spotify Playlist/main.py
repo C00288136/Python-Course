@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import pprint
 import requests
 from dotenv import load_dotenv
 import spotipy
@@ -9,13 +10,13 @@ import os
 load_dotenv()
 
 # Ensure the date input and web scraping parts are commented or handled separately
-# date = input("Which year do you want to travel to? Type the date in this format YYYY-MM-DD: ")
-# URL = f"https://www.billboard.com/charts/hot-100/{date}/"
-# response = requests.get(URL)
-# web_page = response.text
-# soup = BeautifulSoup(web_page, "html.parser")
-# song_name_span = soup.select("li ul li h3")
-# song_names = [song.getText().strip() for song in song_name_span]
+date = input("Which year do you want to travel to? Type the date in this format YYYY-MM-DD: ")
+URL = f"https://www.billboard.com/charts/hot-100/{date}/"
+response = requests.get(URL)
+web_page = response.text
+soup = BeautifulSoup(web_page, "html.parser")
+song_name_span = soup.select("li ul li h3")
+song_names = [song.getText().strip() for song in song_name_span]
 
 # Spotify API credentials from environment variables
 CLIENT_ID = os.environ.get("SPOTIFY_CLIENT")
@@ -45,6 +46,20 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID,
                                                cache_path="token.txt"))
 
 # Get the authenticated user's ID
-user_id = sp.current_user()["id"]
+user = sp.current_user()["id"]
+song_uris = []
+year = date.split("-")[0]
+for song in song_names:
+    
+    result = sp.search(q=f"track:{song} year:{year}", type="track")
+    print(result)
+    try:
+        uri = result["tracks"]["items"][0]["uri"]
+        song_uris.append(uri)
+    except IndexError:
+        print(f"{song} doesnt exist on spotify. Skipped")
 
-print(user_id)
+
+playlist = sp.user_playlist_create(user=user,name=f"Billboard for {date}",public=False,collaborative=False,description="Python generated playlist based on webscrapped data of tbe most popular songs")
+
+sp.playlist_add_items(playlist_id=playlist["id"], items=song_uris)
