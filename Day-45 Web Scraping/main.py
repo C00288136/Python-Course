@@ -1,25 +1,22 @@
-import requests
 from bs4 import BeautifulSoup
+import requests
 
-URL = "https://www.empireonline.com/movies/features/best-movies-2/"
 
-# Write your code below this line 👇
+url = requests.get("https://news.ycombinator.com/news")
 
-response = requests.get(url=URL)
+yc_web_page = url.text
 
-scrapped_info = response.text
 
-soup = BeautifulSoup(scrapped_info, "html.parser")
+soup = BeautifulSoup(yc_web_page,"html.parser")
 
-movieslist =[item.getText() for item in soup.find_all("h3", class_="listicleItem_listicle-item__title__BfenH")]
+article_tag = soup.find("span",class_="titleline")
 
-movieslist.reverse()
 
-print(movieslist)
+article_anchor = article_tag.find("a")
 
-with open ("Movie-List.txt", "w") as file:
-    for movie in movieslist:
-        file.write(f"{movie}\n")
+article_score = soup.find("span", class_="score")
+
+print(article_score.getText())
 
 
 
