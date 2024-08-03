@@ -12,6 +12,7 @@ import os
 
 load_dotenv()
 API_KEY = os.getenv("api")
+MOVIE_DB_IMAGE_URL = "https://image.tmdb.org/t/p/original/"
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
@@ -53,8 +54,13 @@ class add_movie(FlaskForm):
 @app.route("/")
 def home():
     # fetch all db tables
-    result = db.session.execute(db.select(Movie).order_by(Movie.title))
+    result = db.session.execute(db.select(Movie).order_by(Movie.rating))
     all_movies = result.scalars().all()
+
+    for i in range(len(all_movies)):
+        all_movies[i].ranking = len(all_movies) - i
+    db.session.commit()
+
     return render_template("index.html", movies=all_movies)
 
 @app.route("/edit", methods=["GET", "POST"])
@@ -111,7 +117,7 @@ def find_movie():
     year = data["release_date"][:4]
     
 
-    MOVIE_DB_IMAGE_URL = "https://image.tmdb.org/t/p/original/"
+    
     new_movie = Movie(
     title=data['original_title'],
     year=data['release_date'][0:4],  # Extract the year from the release date
@@ -121,7 +127,7 @@ def find_movie():
     db.session.add(new_movie)
     db.session.commit()
 
-    return redirect(url_for('home'))
+    return redirect(url_for("edit", id=new_movie.id))
 
 
     
