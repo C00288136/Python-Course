@@ -24,7 +24,7 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    result = db.get_or_404(User,user_id)
+    return db.get_or_404(User,user_id)
 
 # CREATE DATABASE
 class Base(DeclarativeBase):
@@ -48,7 +48,7 @@ class BlogPost(db.Model):
 
 # TODO: Create a User table for all your registered users. 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     email: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
     password : Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
@@ -58,12 +58,31 @@ class User(db.Model):
 with app.app_context():
     db.create_all()
 
+def admin_only(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        # if user not admin or not logged in
+        if not current_user.is_authenticated or current_user.id != 1:
+            return abort(403)
+        # otherwise continue with route
+        return f(*args, **kwargs)
+    return wrapper
+        
+
+
 
 # TODO: Use Werkzeug to hash the user's password when creating a new user.
 @app.route('/register', methods=["GET", "POST"])
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
+
+        result = db.session.execute(db.select(User).where(User.email == form.email.data))
+        user = result.scalar()
+        if user:
+            flash("You've already signed up with this email, log in instead!")
+            return redirect(url_for('login'))
+        
         hashed_password = generate_password_hash(form.password.data,"pbkdf2:sha256", salt_length=8)
         new_user = User(
             email = form.email.data,
@@ -72,6 +91,7 @@ def register():
         )
         db.session.add(new_user)
         db.session.commit()
+
         login_user(new_user)
         return redirect(url_for('get_all_posts'))
     return render_template("register.html", form=form)
@@ -87,9 +107,19 @@ def login():
         password = form.password.data
         result = db.session.execute(db.select(User).where(User.email == email))
         user = result.scalar()
-        if user and check_password_hash(password, user.password):
+        
+        if not user:
+            flash("This email doesnt exist please try again")
+            return redirect(url_for("login"))
+        
+        elif not check_password_hash(user.password, password):
+            flash("Incorrect password please try again")
+            return redirect(url_for("login"))
+
+        else:
             login_user(user)
-            return redirect(url_for(get_all_posts))
+            return redirect(url_for('get_all_posts'))
+        
 
 
     return render_template("login.html", form=form)
@@ -97,6 +127,7 @@ def login():
 
 @app.route('/logout')
 def logout():
+    logout_user()
     return redirect(url_for('get_all_posts'))
 
 
@@ -116,6 +147,7 @@ def show_post(post_id):
 
 # TODO: Use a decorator so only an admin user can create a new post
 @app.route("/new-post", methods=["GET", "POST"])
+@admin_only
 def add_new_post():
     form = CreatePostForm()
     if form.validate_on_submit():
@@ -135,6 +167,7 @@ def add_new_post():
 
 # TODO: Use a decorator so only an admin user can edit a post
 @app.route("/edit-post/<int:post_id>", methods=["GET", "POST"])
+@admin_only
 def edit_post(post_id):
     post = db.get_or_404(BlogPost, post_id)
     edit_form = CreatePostForm(
@@ -157,6 +190,7 @@ def edit_post(post_id):
 
 # TODO: Use a decorator so only an admin user can delete a post
 @app.route("/delete/<int:post_id>")
+@admin_only
 def delete_post(post_id):
     post_to_delete = db.get_or_404(BlogPost, post_id)
     db.session.delete(post_to_delete)
